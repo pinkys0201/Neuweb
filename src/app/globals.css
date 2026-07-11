@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc; /* Slate-50 - very light off-white */
+  --foreground: #1e293b; /* Slate-800 - dark slate for text */
 }
 
 @theme inline {
@@ -12,12 +12,8 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* Optional: Keep dark mode if system prefers, otherwise remove lines 15-20 to enforce light theme everywhere */
+/* For this request "Redesign ... into a Light Theme", we will prioritize the light look as default */
 
 body {
   background: var(--background);
