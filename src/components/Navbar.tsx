@@ -52,20 +52,24 @@ export default function Navbar() {
         { name: 'Contact', href: '/contact' },
     ];
 
+    const navClass = scrolled
+        ? 'bg-black/60 backdrop-blur-xl border-b border-white/5 py-4 shadow-2xl shadow-black/50 text-white'
+        : 'bg-transparent py-6 text-white';
+
     return (
-        <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 backdrop-blur-md py-4 shadow-sm' : 'bg-transparent py-6'}`}>
+        <nav className={`fixed w-full z-50 transition-all duration-300 ${navClass}`}>
             <div className="container mx-auto px-6 flex justify-between items-center">
-                <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent">
                     NeuApex
                 </Link>
 
                 {/* Desktop Menu */}
                 <div className="hidden md:flex space-x-8 items-center">
-                    <Link href="/" className={`text-sm font-medium transition-colors hover:text-blue-600 ${pathname === '/' ? 'text-blue-600' : 'text-slate-600'}`}>
+                    <Link href="/" className={`text-sm font-medium transition-colors ${pathname === '/' ? 'text-cyan-400' : 'text-slate-300 hover:text-white'}`}>
                         Home
                     </Link>
 
-                    <Link href="/about" className={`text-sm font-medium transition-colors hover:text-blue-600 ${pathname === '/about' ? 'text-blue-600' : 'text-slate-600'}`}>
+                    <Link href="/about" className={`text-sm font-medium transition-colors ${pathname === '/about' ? 'text-cyan-400' : 'text-slate-300 hover:text-white'}`}>
                         About
                     </Link>
 
@@ -77,7 +81,7 @@ export default function Navbar() {
                     >
                         <Link
                             href="/services"
-                            className={`flex items-center text-sm font-medium transition-colors hover:text-blue-600 py-4 ${pathname.startsWith('/services') ? 'text-blue-600' : 'text-slate-600'}`}
+                            className={`flex items-center text-sm font-medium transition-colors py-4 ${pathname.startsWith('/services') ? 'text-cyan-400' : 'text-slate-300 hover:text-white'}`}
                         >
                             Services <FaChevronDown className="ml-1 text-xs" />
                         </Link>
@@ -86,16 +90,16 @@ export default function Navbar() {
                             <div
                                 className="absolute left-0 top-full pt-2 w-56"
                                 onMouseEnter={() => setIsServiceHover(true)}
-                                onMouseLeave={() => setIsServiceHover(false)}
+                                  onMouseLeave={() => setIsServiceHover(false)}
                             >
-                                <div className="bg-white/95 backdrop-blur-xl border border-slate-100 rounded-xl shadow-xl z-50 overflow-hidden">
+                                <div className="bg-black/90 backdrop-blur-xl border border-white/10 text-white rounded-xl shadow-xl z-50 overflow-hidden">
                                     <div className="py-2">
                                         {services.length > 0 ? (
                                             services.map((service) => (
                                                 <Link
                                                     key={service._id}
                                                     href={`/services/${service.slug}`}
-                                                    className="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors"
+                                                    className="block px-4 py-2 text-sm transition-colors text-slate-300 hover:bg-white/5 hover:text-cyan-400"
                                                 >
                                                     {service.title}
                                                 </Link>
@@ -103,8 +107,8 @@ export default function Navbar() {
                                         ) : (
                                             <div className="px-4 py-2 text-sm text-slate-400">Loading services...</div>
                                         )}
-                                        <div className="border-t border-slate-100 mt-2 pt-2">
-                                            <Link href="/services" className="block px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-semibold text-center">
+                                        <div className="mt-2 pt-2 border-t border-white/10">
+                                            <Link href="/services" className="block px-4 py-2 text-sm font-semibold text-center text-cyan-400 hover:text-cyan-300">
                                                 View All Services
                                             </Link>
                                         </div>
@@ -118,20 +122,20 @@ export default function Navbar() {
                         <Link
                             key={link.name}
                             href={link.href}
-                            className={`text-sm font-medium transition-colors hover:text-blue-600 ${pathname === link.href ? 'text-blue-600' : 'text-slate-600'}`}
+                            className={`text-sm font-medium transition-colors ${pathname === link.href ? 'text-cyan-400' : 'text-slate-300 hover:text-white'}`}
                         >
                             {link.name}
                         </Link>
                     ))}
 
-                    <Link href="/contact" className="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-full text-sm font-semibold transition-all hover:shadow-lg shadow-slate-200">
+                    <Link href="/contact" className="px-5 py-2 rounded-full text-sm font-semibold transition-all bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 text-white hover:brightness-110 shadow-lg shadow-blue-500/25">
                         Get Started
                     </Link>
                 </div>
 
                 {/* Mobile Toggle */}
                 <div className="md:hidden">
-                    <button onClick={() => setIsOpen(!isOpen)} className="text-slate-800">
+                    <button onClick={() => setIsOpen(!isOpen)} className="text-white">
                         {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
                     </button>
                 </div>
@@ -139,19 +143,19 @@ export default function Navbar() {
 
             {/* Mobile Menu */}
             {isOpen && (
-                <div className="md:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-xl border-t border-slate-100 h-screen overflow-y-auto pb-20">
+                <div className="md:hidden absolute top-full left-0 w-full h-screen overflow-y-auto pb-20 bg-black/95 backdrop-blur-xl border-t border-white/10 text-white">
                     <div className="flex flex-col p-6 space-y-4">
-                        <Link href="/" className="text-slate-800 text-lg hover:text-blue-600" onClick={() => setIsOpen(false)}>Home</Link>
-                        <Link href="/about" className="text-slate-800 text-lg hover:text-blue-600" onClick={() => setIsOpen(false)}>About</Link>
+                        <Link href="/" className="text-lg text-slate-200 hover:text-cyan-400" onClick={() => setIsOpen(false)}>Home</Link>
+                        <Link href="/about" className="text-lg text-slate-200 hover:text-cyan-400" onClick={() => setIsOpen(false)}>About</Link>
 
                         <div className="space-y-2">
-                            <Link href="/services" className="text-blue-600 text-lg font-bold" onClick={() => setIsOpen(false)}>Services</Link>
-                            <div className="pl-4 border-l-2 border-slate-200 space-y-2 mt-2">
+                            <Link href="/services" className="text-lg font-bold text-cyan-400" onClick={() => setIsOpen(false)}>Services</Link>
+                            <div className="pl-4 border-l-2 border-white/10 space-y-2 mt-2">
                                 {services.map((service) => (
                                     <Link
                                         key={service._id}
                                         href={`/services/${service.slug}`}
-                                        className="block text-slate-500 hover:text-blue-600"
+                                        className="block text-slate-400 hover:text-cyan-400"
                                         onClick={() => setIsOpen(false)}
                                     >
                                         {service.title}
@@ -164,7 +168,7 @@ export default function Navbar() {
                             <Link
                                 key={link.name}
                                 href={link.href}
-                                className="text-slate-800 text-lg hover:text-blue-600"
+                                className="text-lg text-slate-200 hover:text-cyan-400"
                                 onClick={() => setIsOpen(false)}
                             >
                                 {link.name}
@@ -172,7 +176,7 @@ export default function Navbar() {
                         ))}
                         <Link
                             href="/contact"
-                            className="px-5 py-3 bg-blue-600 text-center text-white rounded-lg font-semibold mt-4"
+                            className="px-5 py-3 text-center rounded-lg font-semibold mt-4 block bg-gradient-to-r from-cyan-400 to-blue-500 text-white shadow-lg shadow-blue-500/20"
                             onClick={() => setIsOpen(false)}
                         >
                             Get Started

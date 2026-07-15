@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef } from 'react';
 import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { FaArrowRight, FaCode, FaBullhorn, FaMobileAlt, FaLayerGroup } from 'react-icons/fa';
+import { FaArrowRight, FaCode, FaBullhorn, FaLayerGroup, FaMobileAlt, FaShoppingCart, FaCloud } from 'react-icons/fa';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,79 +23,147 @@ interface ServicesClientProps {
 export default function ServicesClient({ services }: ServicesClientProps) {
     const mainRef = useRef<HTMLDivElement>(null);
 
-    // Color palette for services (matching homepage)
-    const serviceColors = [
-        { from: 'from-pink-500', to: 'to-rose-500', bg: 'bg-pink-50', text: 'text-pink-600', border: 'group-hover:border-pink-500', shadow: 'hover:shadow-pink-200' },
-        { from: 'from-cyan-500', to: 'to-blue-500', bg: 'bg-cyan-50', text: 'text-cyan-600', border: 'group-hover:border-cyan-500', shadow: 'hover:shadow-cyan-200' },
-        { from: 'from-purple-500', to: 'to-indigo-500', bg: 'bg-purple-50', text: 'text-purple-600', border: 'group-hover:border-purple-500', shadow: 'hover:shadow-purple-200' },
-        { from: 'from-orange-500', to: 'to-amber-500', bg: 'bg-orange-50', text: 'text-orange-600', border: 'group-hover:border-orange-500', shadow: 'hover:shadow-orange-200' },
-        { from: 'from-emerald-500', to: 'to-teal-500', bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'group-hover:border-emerald-500', shadow: 'hover:shadow-emerald-200' },
-        { from: 'from-violet-500', to: 'to-fuchsia-500', bg: 'bg-violet-50', text: 'text-violet-600', border: 'group-hover:border-violet-500', shadow: 'hover:shadow-violet-200' },
-    ];
+    // Color theme mapping matching the global design system
+    const serviceThemes: Record<string, { accentClass: string; hoverBorder: string; glowClass: string; textClass: string; iconBg: string }> = {
+        'web-development': { 
+            accentClass: 'text-webdev-cyan', 
+            hoverBorder: 'hover:border-webdev-cyan/40', 
+            glowClass: 'from-webdev-cyan/5', 
+            textClass: 'text-webdev-cyan', 
+            iconBg: 'bg-webdev-cyan/10 border-webdev-cyan/20' 
+        },
+        'digital-marketing': { 
+            accentClass: 'text-marketing-pink', 
+            hoverBorder: 'hover:border-marketing-pink/40', 
+            glowClass: 'from-marketing-pink/5', 
+            textClass: 'text-marketing-pink', 
+            iconBg: 'bg-marketing-pink/10 border-marketing-pink/20' 
+        },
+        'cloud-solutions': { 
+            accentClass: 'text-devops-blue', 
+            hoverBorder: 'hover:border-devops-blue/40', 
+            glowClass: 'from-devops-blue/5', 
+            textClass: 'text-devops-blue', 
+            iconBg: 'bg-devops-blue/10 border-devops-blue/20' 
+        },
+        'mobile-app-dev': { 
+            accentClass: 'text-marketing-purple', 
+            hoverBorder: 'hover:border-marketing-purple/40', 
+            glowClass: 'from-marketing-purple/5', 
+            textClass: 'text-marketing-purple', 
+            iconBg: 'bg-marketing-purple/10 border-marketing-purple/20' 
+        },
+        'ui-ux-design': { 
+            accentClass: 'text-webdev-cyan', 
+            hoverBorder: 'hover:border-webdev-cyan/40', 
+            glowClass: 'from-webdev-cyan/5', 
+            textClass: 'text-webdev-cyan', 
+            iconBg: 'bg-webdev-cyan/10 border-webdev-cyan/20' 
+        },
+        'e-commerce': { 
+            accentClass: 'text-marketing-pink', 
+            hoverBorder: 'hover:border-marketing-pink/40', 
+            glowClass: 'from-marketing-pink/5', 
+            textClass: 'text-marketing-pink', 
+            iconBg: 'bg-marketing-pink/10 border-marketing-pink/20' 
+        },
+    };
 
     useLayoutEffect(() => {
         const ctx = gsap.context(() => {
             const cards = gsap.utils.toArray('.service-card') as HTMLElement[];
-
-            gsap.from(cards, {
-                scrollTrigger: {
-                    trigger: mainRef.current,
-                    start: 'top 80%',
-                },
-                y: 50,
-                opacity: 0,
-                duration: 0.8,
-                stagger: 0.1,
-                ease: 'power2.out',
-                clearProps: 'opacity,transform'
-            });
+            if (cards.length) {
+                gsap.from(cards, {
+                    scrollTrigger: {
+                        trigger: mainRef.current,
+                        start: 'top 80%',
+                    },
+                    y: 40,
+                    opacity: 0,
+                    duration: 0.7,
+                    stagger: 0.1,
+                    ease: 'power2.out',
+                    clearProps: 'opacity,transform'
+                });
+            }
         }, mainRef);
         return () => ctx.revert();
     }, []);
 
+    const getTheme = (slug: string) => {
+        return serviceThemes[slug] || {
+            accentClass: 'text-cyan-400',
+            hoverBorder: 'hover:border-cyan-400/40',
+            glowClass: 'from-cyan-400/5',
+            textClass: 'text-cyan-400',
+            iconBg: 'bg-cyan-400/10 border-cyan-400/20'
+        };
+    };
+
+    const getIcon = (iconName?: string, title?: string) => {
+        const name = iconName || title || '';
+        if (name.includes('Code') || name.includes('Web')) return <FaCode />;
+        if (name.includes('Bullhorn') || name.includes('Marketing')) return <FaBullhorn />;
+        if (name.includes('Layer') || name.includes('Cloud') || name.includes('DevOps')) return <FaCloud />;
+        if (name.includes('Mobile') || name.includes('App')) return <FaMobileAlt />;
+        if (name.includes('Shopping') || name.includes('Commerce')) return <FaShoppingCart />;
+        return <FaLayerGroup />;
+    };
+
     return (
-        <div ref={mainRef} className="pt-32 pb-20 bg-slate-50 min-h-screen overflow-hidden font-sans">
+        <div ref={mainRef} className="pt-36 pb-24 bg-slate-950 min-h-screen overflow-hidden font-sans text-slate-100 relative">
             {/* Background Orbs */}
-            <div className="fixed top-0 right-0 w-[600px] h-[600px] bg-purple-100/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none -z-10"></div>
-            <div className="fixed bottom-0 left-0 w-[600px] h-[600px] bg-pink-100/50 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none -z-10"></div>
+            <div className="fixed top-0 right-0 w-[700px] h-[700px] bg-marketing-purple/5 rounded-full blur-[140px] pointer-events-none -z-10"></div>
+            <div className="fixed bottom-0 left-0 w-[700px] h-[700px] bg-devops-blue/5 rounded-full blur-[140px] pointer-events-none -z-10"></div>
 
             <div className="container mx-auto px-6 relative z-10">
-                <div className="text-center mb-16 relative z-10">
-                    <span className="inline-block py-1 px-3 border border-purple-200 rounded-full text-purple-600 text-sm font-semibold tracking-wider mb-4 bg-white/80 backdrop-blur-sm shadow-sm">
+                <div className="text-center mb-24 relative z-10 max-w-2xl mx-auto">
+                    <span className="inline-block px-3 py-1 text-xs font-semibold tracking-wider text-cyan-400 uppercase bg-cyan-950/60 rounded-full border border-cyan-800/40 mb-4 animate-pulse">
                         OUR EXPERTISE
                     </span>
-                    <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight">
-                        Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 animate-gradient-x">Services</span>
+                    <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tight leading-none">
+                        Our specialized <span className="text-transparent bg-clip-text bg-gradient-to-r from-webdev-cyan via-devops-blue to-marketing-purple">capabilities</span>
                     </h1>
-                    <p className="text-xl text-slate-500 max-w-2xl mx-auto font-light leading-relaxed">
-                        From concept to launch, we provide end-to-end digital solutions that help your business thrive.
+                    <p className="text-lg text-slate-400 max-w-xl mx-auto font-light leading-relaxed">
+                        We deploy integrated technical systems and conversion marketing loops to build high-performance products.
                     </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {services.map((service, index) => {
-                        const colorTheme = serviceColors[index % serviceColors.length];
+                    {services.map((service) => {
+                        const theme = getTheme(service.slug);
                         return (
-                            <div key={service._id} className={`service-card group relative p-10 rounded-[2.5rem] bg-white border border-slate-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)] transition-all duration-500 hover:-translate-y-2 overflow-hidden`}>
-                                {/* Hover Gradient Background (Fills card) */}
-                                <div className={`absolute inset-0 bg-gradient-to-br ${colorTheme.from} ${colorTheme.to} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+                            <div 
+                                key={service._id} 
+                                className={`service-card group relative p-10 rounded-3xl bg-white/[0.01] border border-white/5 ${theme.hoverBorder} hover:bg-white/[0.02] transition-all duration-500 hover:-translate-y-2 overflow-hidden shadow-2xl flex flex-col justify-between min-h-[380px]`}
+                            >
+                                {/* Radial hover glow */}
+                                <div className={`absolute inset-0 bg-radial ${theme.glowClass} via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`}></div>
 
-                                {/* Icon Area */}
-                                <div className={`relative z-10 mb-8 w-16 h-16 ${colorTheme.bg} rounded-2xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 group-hover:bg-white/20`}>
-                                    <div className={`text-2xl ${colorTheme.text} group-hover:text-white`}>
-                                        {/* Simple heuristic for icons based on what might be in DB or fallback */}
-                                        {service.icon?.includes('Code') || service.title.includes('Web') ? <FaCode /> :
-                                            service.icon?.includes('Bullhorn') || service.title.includes('Marketing') ? <FaBullhorn /> :
-                                                service.icon?.includes('Mobile') || service.title.includes('Mobile') || service.title.includes('App') ? <FaMobileAlt /> :
-                                                    <FaLayerGroup />}
+                                <div>
+                                    {/* Icon Area */}
+                                    <div className={`relative z-10 mb-8 w-14 h-14 ${theme.iconBg} rounded-2xl flex items-center justify-center border group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500`}>
+                                        <div className={`text-xl ${theme.accentClass}`}>
+                                            {getIcon(service.icon, service.title)}
+                                        </div>
                                     </div>
+
+                                    <h3 className="relative z-10 text-2xl font-bold mb-4 text-white group-hover:text-white transition-colors">
+                                        {service.title}
+                                    </h3>
+                                    <p className="relative z-10 text-slate-400 mb-8 text-sm font-light leading-relaxed">
+                                        {service.shortDescription}
+                                    </p>
                                 </div>
 
-                                <h3 className="relative z-10 text-2xl font-bold mb-4 text-slate-900 group-hover:text-white transition-colors">{service.title}</h3>
-                                <p className="relative z-10 text-slate-500 mb-8 font-light leading-relaxed group-hover:text-white/90">{service.shortDescription}</p>
-
-                                <Link href={`/services/${service.slug}`} className={`relative z-10 inline-flex items-center font-bold ${colorTheme.text} group-hover:text-white hover:opacity-80 transition-opacity`}>
-                                    View Details <span className={`ml-3 w-8 h-8 rounded-full ${colorTheme.bg} group-hover:bg-white/20 flex items-center justify-center group-hover:translate-x-1 transition-transform`}><FaArrowRight size={12} className="group-hover:text-white" /></span>
+                                <Link 
+                                    href={`/services/${service.slug}`} 
+                                    className={`relative z-10 inline-flex items-center font-bold text-sm ${theme.accentClass} hover:opacity-80 transition-opacity group/link`}
+                                >
+                                    View Details 
+                                    <span className={`ml-3 w-7 h-7 rounded-full bg-white/5 group-hover:bg-white/10 flex items-center justify-center group-hover/link:translate-x-1 transition-all`}>
+                                        <FaArrowRight size={10} className="text-white" />
+                                    </span>
                                 </Link>
                             </div>
                         );
